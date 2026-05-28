@@ -1,0 +1,14 @@
+{
+  "name": "membrain-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MemBrain — Strategic Collective Forgetting Agent",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:backend": "npm run dev -w packages/backend",
+    "dev:frontend": "npm run dev -w packages/frontend",
+    "dev": "npm run dev:backend & npm run dev:frontend"
+  }
+}

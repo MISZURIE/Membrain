@@ -1,0 +1,50 @@
+name: Deploy to Alibaba Cloud ECS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run test --if-present
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build backend Docker image
+        run: docker build -t membrain-backend ./packages/backend
+      - name: Build frontend Docker image
+        run: docker build -t membrain-frontend ./packages/frontend
+      # TODO: Push to Alibaba Cloud ACR
+      # - name: Push to ACR
+      #   run: |
+      #     docker login ${{ secrets.ACR_REGISTRY }} -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }}
+      #     docker tag membrain-backend ${{ secrets.ACR_REGISTRY }}/membrain-backend:latest
+      #     docker push ${{ secrets.ACR_REGISTRY }}/membrain-backend:latest
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to ECS via SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.ECS_HOST }}
+          username: root
+          key: ${{ secrets.ECS_SSH_KEY }}
+          script: |
+            cd /opt/membrain
+            docker-compose pull
+            docker-compose up -d
+            cd packages/backend && npx prisma migrate deploy
+            docker system prune -f

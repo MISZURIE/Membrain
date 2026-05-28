@@ -1,0 +1,110 @@
+openapi: 3.1.0
+info:
+  title: MemBrain API
+  version: 1.0.0
+  description: Strategic Collective Forgetting Agent — REST API specification
+
+servers:
+  - url: http://localhost:3001
+    description: Development server
+
+paths:
+  /api/auth/register:
+    post:
+      summary: Register a new user
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string, format: email }
+                password: { type: string, minLength: 8 }
+      responses:
+        '201':
+          description: User registered successfully
+
+  /api/auth/login:
+    post:
+      summary: Login
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+                password: { type: string }
+      responses:
+        '200':
+          description: Login successful
+
+  /api/agent/chat:
+    post:
+      summary: Send message to MemBrain agent
+      tags: [Agent]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message: { type: string }
+                sessionId: { type: string }
+      responses:
+        '200':
+          description: Agent reply
+
+  /api/memory:
+    get:
+      summary: List all memories (paginated)
+      tags: [Memory]
+      responses:
+        '200':
+          description: Memory list
+
+  /api/memory/search:
+    post:
+      summary: Semantic search over memories
+      tags: [Memory]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query: { type: string }
+                limit: { type: integer }
+      responses:
+        '200':
+          description: Search results
+
+  /api/checkpoint/pending:
+    get:
+      summary: Get pending forgetting proposals
+      tags: [Checkpoint]
+      responses:
+        '200':
+          description: Pending checkpoints
+
+  /api/budget/status:
+    get:
+      summary: Get current token budget status
+      tags: [Budget]
+      responses:
+        '200':
+          description: Budget status
+
+  /health:
+    get:
+      summary: Health check
+      tags: [System]
+      responses:
+        '200':
+          description: Service healthy
