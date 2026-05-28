@@ -1,8 +1,8 @@
-# 🧠 MemBrain — Strategic Collective Forgetting Agent
+# 🧠 MemBrain - Strategic Collective Forgetting Agent
 
-> **Qwen Cloud AI Hackathon 2026 — Track 1: MemoryAgent**
+> **Qwen Cloud AI Hackathon 2026 - Track 1: MemoryAgent**
 >
-> *The world's first production-grade agent that knows not just what to remember — but what to forget.*
+> *The world's first production-grade agent that knows not just what to remember - but what to forget.*
 
 ***
 
